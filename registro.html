@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+
+    <script src="/script/jquery.min.js"></script>
+    <link rel="stylesheet" href="/script/bootstrap.min.css">
+  <script src="/socket.io/socket.io.js"></script>
+    <script src = "/script/bootstrap.min.js"></script>
+
+    <style media="screen">
+      .remove-float{
+        float:none;
+      }
+      .big-top-space{
+
+    margin-top: 150px;
+      }
+      .top-space{
+
+        margin-top: 1.5em;
+      }
+
+      fieldset.scheduler-border {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+            box-shadow:  0px 0px 0px 0px #000;
+}
+
+legend.scheduler-border {
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width:inherit; /* Or auto */
+   padding: 5px; /* To give a bit of padding on the left and right */
+   border-bottom:none;
+
+}
+body {background:url("http://www.galaxiastudio.com/wp-content/uploads/2014/03/2252.jpg")#FF9000}
+
+.fondo{
+background-color:#A4C639;
+}
+    </style>
+
+    <script type="text/javascript">
+     var socket = io.connect('http://localhost:3000');
+      $(document).on('ready',principal);
+      function principal(){
+        //  alert($('select[name=seleccion]').val());
+      $('#enviar').on("click",function(){
+            var mensaje={
+              cedula:$('#cedula').val(),
+              nombre:$('#nombre').val(),
+              apellido:$('#apellido').val(),
+              password:$('#password').val(),
+              dirrecion:$('#direccion').val(),
+              carrera:$('#carrera').val(),
+              correo:$('#correo').val(),
+              funcion:$('select[name=seleccion]').val()
+            }
+
+          socket.emit('datos',mensaje);
+          
+
+      });
+      }
+    </script>
+  </head>
+  <body>
+
+  <div class="col-md-4 remove-float center-block big-top-space ">
+
+          <fieldset class="form-group scheduler-border fondo">
+              <div class="form-group center-block remove-float top-space">
+
+                <p class="text-center">
+                <strong>REGISTRO</strong>
+                </p>
+
+              </div>
+
+
+            <div class="form-group">
+
+              <label for="cedula">Cedula:</label>
+              <input class="form-control" type="text" id="cedula" name=”cedula”/>
+            </div>
+
+            <div class="form-group">
+              <label for="nombre">Nombre:</label>
+              <input class="form-control" type="text" id="nombre" name=”nombre”/>
+            </div>
+            <div class="form-group">
+
+              <label for="apellido">Apellido:</label>
+              <input class="form-control" type="text" id="apellido" name=”apellido”/>
+            </div>
+            <div class="form-group">
+
+              <label for="direccion">Dirección:</label>
+              <input class="form-control" type="text" id="direccion" name=”direccion”/>
+            </div>
+            <div class="form-group">
+
+              <label for="correo">Correo:</label>
+              <input class="form-control" type="text" id="correo" name=”correo”/>
+            </div>
+            <div class="form-group">
+
+              <label for="carrera">Carrera:</label>
+              <input class="form-control" type="text" id="carrera" name=”carrera”/>
+            </div>
+            <div class="form-group">
+
+              <label for="password">password:</label>
+              <input class="form-control" type="password" id="password" name=”password”/>
+            </div>
+
+            <div class="form-group">
+              <label for="seleccion">Función</label>
+              <select name="seleccion" id="seleccion" class="form-control">
+                  <option>Estudiante</option>
+                  <option>Profesor</option>
+              </select>
+            </div>
+
+            <div class="form-group top-space">
+              <button class="btn btn-info" id="enviar" name="enviar">enviar</button>
+
+            </div>
+
+              </fieldset>
+    </div>
+  </body>
+</html>

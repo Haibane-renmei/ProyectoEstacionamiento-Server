@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/script/jquery.min.js"></script>
+    <link rel="stylesheet" href="/script/bootstrap.min.css">
+
+    <script src = "/script/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+
+    <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a class="navbar-brand" href="#">Estacionamiento</a>
+
+      </div>
+      <div  class="collapse navbar-collapse">
+
+          <ul class="nav navbar-nav">
+
+
+                <li class="dropdown">
+               <a class="navbar-brand" class="dropdown-toggle" data-toggle="dropdown" href="#">
+               Cliente <span class="caret"></span></a>
+               <ul class="dropdown-menu" role="menu">
+                 <li  role="presentation"><a role="menuitem" tabindex="-1" href="busquedaCliente2.php">Cliente</a></li>
+                  <li role="presentation" class="divider"></li>
+                <li class="disabled" role="presentation"><a  role="menuitem" tabindex="-1"  href="#">INGRESAR</a></li>
+                <li class="disabled" role="presentation"><a role="menuitem" tabindex="-1" href="#">BUSQUEDA POR CODIGO</a></li>
+                 <li class="disabled"  role="presentation"><a role="menuitem" tabindex="-1" id='busquedaCliente4' href="#">BUSQUEDA POR NOMBRE</a></li>
+                 <li  class="disabled" role="presentation"><a role="menuitem" tabindex="-1" id='eliminaCliente2' href="#">ELIMINAR</a></li>
+              </ul>
+               </li>
+            </ul>
+       </div>
+  </nav>
+
+    <script type="text/javascript">
+  var socket = io.connect('http://localhost:3000');
+            socket.on('new_c', function (msg) {
+                var datos = msg;
+                var producto = "<table class='table table-bordered'>  <div class='pre-scrollable'> <tr> <td class='text-center text-uppercase'> <strong>Usuario </strong></td> <td class='text-center text-uppercase'> <strong>Placa</strong> </td> </tr>";
+
+                for (i = 0; i < datos.length; i++){
+                 producto += "<tr> <td> " + datos[i].ci_usuario + " </td> <td>" + datos[i].placa + "</td> </tr>";
+                }
+
+                producto += "</div> </table>"
+
+
+                document.getElementById("editable").innerHTML = producto;
+            });
+
+
+    </script>
+<div class="row">
+  <div class="col-md-6 col-md-offset-5 ">
+    <h2 class="center-block"> Autos ingresados </h2>
+  </div>
+      <div class="col-md-6 col-md-offset-4" id='editable'></div>
+</div>
+
+
+
+  </body>
+</html>

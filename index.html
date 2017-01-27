@@ -1,0 +1,180 @@
+<html>
+  <head>
+    <title>Control de Estacionamiento</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/script/jquery.min.js"></script>
+    <link rel="stylesheet" href="/script/bootstrap.min.css">
+
+    <script src = "/script/bootstrap.min.js"></script>
+    <script src= "/scripts/Chart.js"></script>
+
+
+
+    <body>
+
+
+
+  </body>
+
+  <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <a class="navbar-brand" href="#">Estacionamiento</a>
+
+    </div>
+    <div  class="collapse navbar-collapse">
+
+        <ul class="nav navbar-nav">
+
+
+              <li class="dropdown">
+             <a class="navbar-brand" class="dropdown-toggle" data-toggle="dropdown" href="#">
+        <strong> MENU </strong> <span class="caret"></span></a>
+             <ul class="dropdown-menu" role="menu">
+              <li role="presentation"><a  role="menuitem" tabindex="-1"  href="/carrosingresados">INGRESAR</a></li>
+              <li class="disabled" role="presentation"><a role="menuitem" tabindex="-1" href="#">BUSQUEDA POR CODIGO</a></li>
+               <li class="disabled"  role="presentation"><a role="menuitem" tabindex="-1" id='busquedaCliente4' href="#">BUSQUEDA POR NOMBRE</a></li>
+               <li  class="disabled" role="presentation"><a role="menuitem" tabindex="-1" id='eliminaCliente2' href="#">ELIMINAR</a></li>
+            </ul>
+             </li>
+          </ul>
+     </div>
+</nav>
+
+
+
+
+<div class="row">
+  <div class="col-md-6">
+
+
+ <!-- <canvas id="myChart" width="400" height="200"></canvas> -->
+
+  <canvas id="myChart2" width="400" height="200"></canvas>
+
+    <script>
+                    var i=1;
+
+
+                    var socket = io.connect('http://localhost:3000');
+                    socket.on('new_a', function (msg) {
+                            myPieChart.data.datasets[0].data[1] = msg;
+                            myPieChart.update();
+                        });
+
+                        socket.on('new_b', function (msg) {
+                            myPieChart.data.datasets[0].data[0] = msg;
+                            myPieChart.update();
+                        });
+
+                        socket.on('new_c', function (msg) {
+                            var datos = msg;
+                            var producto = "<table class='table table-bordered'>  <div class='pre-scrollable'> <tr> <td> Usuario </td> <td> Placa </td> </tr>";
+
+                            for (i = 0; i < datos.length; i++){
+                             producto += "<tr> <td> " + datos[i].ci_usuario + " </td> <td>" + datos[i].placa + "</td> </tr>";
+                            }
+
+                            producto += "</div> </table>"
+
+
+                            document.getElementById("editable").innerHTML = producto;
+                        });
+
+
+    </script>
+
+            <script>
+            //var ctx = document.getElementById("myChart");
+            var ctx2 = document.getElementById("myChart2");
+
+            /**
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"],
+                    datasets: [{
+                        label: 'Uso por dia',
+                        data: [12, 19, 3, 5, 2, 3, 10],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(0 , 255, 159, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(0 , 255, 159, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+
+            **/
+
+            var myPieChart = new Chart(ctx2,{
+                type: 'pie',
+                data: {
+                labels: [
+                            "Ocupados",
+                            "Vacantes"
+                        ],
+                        datasets: [
+                            {
+                                data: [50, 50],
+                                backgroundColor: [
+                                    "#FF6384",
+                                    "#36A2EB"
+                                ],
+                                hoverBackgroundColor: [
+                                    "#FF6384",
+                                    "#36A2EB"
+                                ]
+                            }]
+                    }
+                });
+            </script>
+
+
+
+  </div>
+
+  <div class="col-md-6">
+    <h2> Autos ingresados </h2>
+
+      <div id='editable'></div>
+  </div>
+
+
+
+</div>
+
+
+  </body>
+</html>

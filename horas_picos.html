@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/script/jquery.min.js"></script>
+    <link rel="stylesheet" href="/script/bootstrap.min.css">
+
+    <script src = "/script/bootstrap.min.js"></script>
+    <script src= "/scripts/Chart.js"></script>
+
+    <script type="text/javascript">
+        var socket = io.connect('http://localhost:3000');
+        socket.on('carrosTiempo', function (msg) {
+          var datos = msg;
+        //  alert(msg.minimo);
+          var producto = "<p class='form-group '><strong>MINIMA FECHA: </strong>"+datos[0].minimo+"</p>";
+          var producto2 = "<p class='form-group mover-izquierda'><strong>MAXIMA FECHA: </strong>"+datos[0].maximo+"</p>";
+
+
+          document.getElementById("minimo").innerHTML = producto;
+          document.getElementById("maximo").innerHTML = producto2;
+
+            });
+
+            socket.on('TABLAcarrostiempo', function (msg) {
+                var datos = msg;
+                var producto = "<table class='table table-bordered'>  <div class='pre-scrollable'> <tr> <td> Usuario </td> <td> Placa </td> </tr>";
+
+                for (i = 0; i < datos.length; i++){
+                 producto += "<tr> <td> " + datos[i].ci_usuario + " </td> <td>" + datos[i].placa + "</td> </tr>";
+                }
+
+                producto += "</div> </table>"
+
+
+                document.getElementById("editable").innerHTML = producto;
+            });
+
+            socket.on('datos_pico', function (msg) {
+                var datos = msg;
+                //alert(msg);
+                var producto = "<table class='table table-bordered table-hover fondo'>  <div class='pre-scrollable'> <tr> <th class='text-center text-uppercase'> CI </th> <th class='text-center text-uppercase'> NOMBRE </th> <th class='text-center text-uppercase'> APELLIDO </th> <th class='text-center text-uppercase'> entrada </th> <th class='text-center text-uppercase'> PLACA </th> <th class='text-center text-uppercase'> MARCA </th>  <th class='text-center text-uppercase'> MODELO </th>  <th class='text-center text-uppercase'>COLOR </th> <th class='text-center text-uppercase'> TIPO_V </th> </tr>";
+
+                for (i = 0; i < datos.datosR.length; i++){
+                 producto += "<tr> <td> " + datos.datosR[i].ci + " </td> <td>" + datos.datosR[i].nombre + "</td>"+"<td> " + datos.datosR[i].apellido + " </td> <td>" + datos.datosR[i].fecha_ini + "</td>"+"<td>" + datos.datosR[i].placa+ " </td> <td>" + datos.datosR[i].marca + "</td>";
+                 producto+="<td>"+datos.datosR[i].modelo+"</td>"+"<td>"+datos.datosR[i].color+"</td>"+"<td>"+datos.datosR[i].tipo+"</td></tr>";
+                }
+
+                producto += "</div> </table>"
+
+                var cantidadMostrar="<p class='top-space'><strong>LA CANTIDAD ES :</strong>"+datos.cantidad[0].cnt+"</p>";
+
+                document.getElementById("datos").innerHTML = producto;
+                  document.getElementById("cantidad2").innerHTML = cantidadMostrar;
+            });
+
+            socket.on('cantidadCarros',function(msg){
+
+
+            var cantidadC="<li class'text-uppercase navbar-brand'> <strong> Carros en este momento:</strong>"+msg[0].cant+"</li>";
+                  document.getElementById("cantidad").innerHTML = cantidadC;
+
+
+            });
+
+            $(document).on('ready',principal);
+            function principal(){
+              //  alert($('select[name=seleccion]').val());
+            $('#buscar').on("click",function(){
+                document.getElementById("datos").innerHTML = " ";
+                  var mensaje={
+                    fechamin:$('#fechaminimo').val(),
+                    horamin:$('#horaminimo').val(),
+                    fechamax:$('#fechamax').val(),
+                    horamax:$('select[name=horamax]').val(),
+                    horaminimo:$('select[name=horaminimo]').val(),
+                    tipo_u:$('select[name=seleccion]').val()
+                  }
+                socket.emit('horas_pico',mensaje);
+            });
+
+                        $("select[name=horaminimo]").change(function(){
+                          if ($('select[name=horaminimo]').val()=="6:00") {
+                             $('#horamax > option[value="8:00"]').attr('selected', 'selected');
+                          }
+                          else {
+                            $('#horamax > option[value="13:00"]').attr('selected', 'selected');
+                          }
+                        });
+            }
+    </script>
+    <style media="screen">
+    .remove-float{
+      float:none;
+    }
+    .mover-derecha{
+      padding-left: 15em;
+    }
+    .mover-derecha2{
+      padding-left: 5em;
+    }
+    .mover-izquierda{
+      padding-left: 1em;
+    }
+    .mover-izquierda3{
+      margin-left: 530px;
+    }
+    .mover-abajo{
+  padding-top: 0.25em;
+    }
+    .mover-arriba{
+  padding-bottom: 0.2em;
+    }
+    .top-space{
+
+      margin-top: 1.5em;
+    }
+    .big-top-space{
+
+  margin-top: 90px;
+    }
+
+
+
+
+
+
+    fieldset.scheduler-border {
+  border: 1px groove #ddd !important;
+  padding: 0 1.4em 1.4em 1.4em !important;
+  margin: 0 0 1.5em 0 !important;
+  -webkit-box-shadow:  0px 0px 0px 0px #000;
+          box-shadow:  0px 0px 0px 0px #000;
+}
+
+legend.scheduler-border {
+  font-size: 1.2em !important;
+  font-weight: bold !important;
+  text-align: left !important;
+  width:inherit; /* Or auto */
+ padding: 5px; /* To give a bit of padding on the left and right */
+ border-bottom:none;
+
+}
+body {background:url("http://www.galaxiastudio.com/wp-content/uploads/2014/03/2252.jpg")#FF9000}
+
+.fondo{
+background-color:#A4C639;
+}
+
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <a class="navbar-brand" href="#">Estacionamiento</a>
+
+      </div>
+      <div  class="collapse navbar-collapse">
+
+          <ul class="nav navbar-nav">
+
+
+                <li class="dropdown">
+               <a class="navbar-brand" class="dropdown-toggle" data-toggle="dropdown" href="#">
+          <strong> MENU </strong> <span class="caret"></span></a>
+               <ul class="dropdown-menu" role="menu">
+                 <li role="presentation"><a  role="menuitem" tabindex="-1"  href="/index">puestos y carros ingresados</a></li>
+                  <li role="presentation"><a  role="menuitem" tabindex="-1"  href="/carrosTiempo">Carros por tiempo dado </a></li>
+                    <li role="presentation"><a  role="menuitem" tabindex="-1"  href="/placa">historial de carro </a></li>
+                   <li role="presentation"><a  role="menuitem" tabindex="-1"  href="/placainfo">info sobre placa</a></li>
+              </ul>
+               </li>
+            </ul>
+            <div class="navbar-brand navbar-right">
+              <ul id="cantidad" name="cantidad" class="nav navbar-nav navbar-right">
+              </ul>
+            </div>
+       </div>
+  </nav>
+
+<div class="container big-top-space">
+  <fieldset class="form-group scheduler-border fondo">
+
+
+      <div class="row">
+              <div class="form-inline text-center">
+                    <div id="minimo"class="form-group">
+
+                    </div>
+                    <div id="maximo" class="form-group">
+
+                    </div>
+
+              </div>
+      </div>
+      <div class="row">
+            <div class="col-sm-4 col-sm-offset-4 top-space">
+                <p class="text-center "><strong>INGRESAR FECHAS</strong></p>
+
+            </div>
+      </div>
+      <div class="row">
+          <div class="col-lg-10 col-lg-offset-1">
+              <div class="form-inline top-space">
+                      <div class="form-group">
+                        <label class="mover-derecha2" for="fechaminimo"> <strong>DESDE:</strong></label>
+                            <input  class="text-center" type="text"  id="fechaminimo" name="fechaminimo" placeholder="fecha minima" value="">
+                            <select class="mover-arriba mover-abajo" name="horaminimo">
+                              <option value="6:00">6:00</option>
+                              <option value="11:30">11:30</option>
+                            </select>
+                            <label class="mover-derecha" for="fechamaximo"> <strong>HASTA: </strong></label>
+                              <input class="text-center" type="text"  id="fechamax" name="fechaminimo" placeholder="fecha maxima"value="">
+                                <select class="mover-abajo mover-arriba disabled" id="horamax" name="horamax">
+                                  <option value="8:00">8:00</option>
+                                  <option value="13:00">13:00</option>
+                                </select>
+
+
+
+                      </div>
+
+
+              </div>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5 col-sm-offset-4 top-space mover-derecha2 ">
+          <label for="seleccion">TIPO DE USUARIO</label>
+          <select name="seleccion">
+            <option value="TODOS">TODOS</option>
+            <option value="PROFESOR">PROFESOR</option>
+            <option value="ESTUDIANTE">ESTUDIANTE</option>
+            <option value="PERSONAL">PERSONAL</option>
+          </select>
+        </div>
+
+
+      </div>
+      <div class="row">
+        <button class="btn btn-info mover-izquierda3 top-space"type="button" id="buscar" name="buscar"><strong>BUSCAR</strong></button>
+
+      </div>
+      </fieldset>
+
+      <div class="text-center" id="cantidad2">
+
+      </div>
+
+      <div id=datos> </div>
+
+
+  </div>
+</div>
+<!--
+  <div  class="col-md-8 center-block text-center remove-float">
+      <div class="form-inline">
+        <div id="minimo"class="form-group">
+
+        </div>
+        <div id="maximo" class="form-group">
+
+        </div>
+
+      </div>
+        </div>
+      <div class="col-md-8  center-block text-center remove-float">
+        <p class="mover-abajo mover-izquierda2"><strong>Ingresar la fecha y hora a buscar</strong></p>
+
+      </div>
+
+      <div class="row">
+        <p class="text-center"><strong>desde</strong></p>
+      </div>
+      <div class="form-inline">
+
+        <div class="form-group" >
+            <input class="" type="text" name="fechaminima" value="">
+        </div>
+        <div class="form-group">
+          <p><strong>a las</strong></p>
+        </div>
+
+          <div class="form-group">
+            <input class"mover-izquierda3" type="text" name="horaMinima" value="">
+          </div>
+
+      </div>
+
+      <div class="form-group">
+        <p class="text-center"><strong>HASTA</strong></p>
+
+      </div>
+    -->
+
+
+
+
+
+  </body>
+</html>

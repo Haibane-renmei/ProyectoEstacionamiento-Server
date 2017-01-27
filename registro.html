@@ -64,10 +64,16 @@ background-color:#A4C639;
             }
 
           socket.emit('datos',mensaje);
-          
+
 
       });
       }
+
+      socket.on('GuardoCorrecto',function(msg){
+          alert(msg);
+          document.location.href="/iniciarSesion";
+
+      });
     </script>
   </head>
   <body>
